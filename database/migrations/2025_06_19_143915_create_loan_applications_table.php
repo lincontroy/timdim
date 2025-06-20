@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('loan_applications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
             $table->decimal('amount', 15, 2);
+            $table->decimal('duration', 15, 2);
             $table->string('status')->default('pending'); // pending, approved, rejected
             $table->text('reason')->nullable();
             $table->timestamps();

@@ -25,29 +25,21 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Approved Loans',
-        href: '/loans/approved',
+        href: '/approvedApplications',
         icon: BadgeDollarSign,
     },
     {
         title: 'Repayments',
-        href: '/repayments',
+        href: '/loanRepayments',
         icon: FileText,
     },
     {
         title: 'Pending Approvals',
-        href: '/loans/pending',
+        href: '/pendingApplications',
         icon: Clock,
-    },
-    {
-        title: 'Settings',
-        href: '/settings',
-        icon: Settings,
-    },
-    {
-        title: 'Help & Support',
-        href: '/help',
-        icon: HelpCircle,
-    },
+    }
+  
+    
 ];
 
 const footerNavItems: NavItem[] = [

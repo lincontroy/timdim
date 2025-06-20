@@ -5,13 +5,14 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\LoanApplication;
 use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 
 class LoanApplicationController extends Controller
 {
     public function index()
     {
-        return LoanApplication::with('user')->latest()->get();
+        return LoanApplication::with('customer')->latest()->get();
     }
 
     public function store(Request $request)
@@ -24,7 +25,13 @@ class LoanApplicationController extends Controller
             'reason' => 'nullable|string',
         ]);
 
-        return LoanApplication::create($validated);
+        return LoanApplication::create([
+            'customer_id' => $request->user_id,
+            'amount' => $request->amount,
+            'duration' => $request->duration,
+            'status' => 'pending',
+            'reason' => $request->reason,
+        ]);
     }
 
     public function show($id)
@@ -51,4 +58,24 @@ class LoanApplicationController extends Controller
         LoanApplication::findOrFail($id)->delete();
         return response()->json(['message' => 'Loan application deleted']);
     }
+
+    public function approve($id)
+{
+    $loan = LoanApplication::findOrFail($id);
+    $loan->status = 'approved';
+    $loan->save();
+
+    return response()->json(['message' => 'Loan approved']);
+}
+
+public function reject(Request $request, $id)
+{
+    $loan = LoanApplication::findOrFail($id);
+    $loan->status = 'rejected';
+    $loan->rejection_reason = $request->input('reason');
+    $loan->save();
+
+    return response()->json(['message' => 'Loan rejected']);
+}
+
 }
