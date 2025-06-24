@@ -63,6 +63,7 @@ class LoanApplicationController extends Controller
 {
     $loan = LoanApplication::findOrFail($id);
     $loan->status = 'approved';
+    $loan->approvedOn = now()->toDateString(); 
     $loan->save();
 
     return response()->json(['message' => 'Loan approved']);

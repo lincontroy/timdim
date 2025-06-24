@@ -51,7 +51,7 @@ export default function LoanApplications({ statusFilter = 'all' }: LoanApplicati
       if (statusFilter !== 'all') {
         fetchedLoans = fetchedLoans.filter(loan => loan.status === statusFilter);
       }
-      setLoans(loanRes.data);
+      setLoans(fetchedLoans);
       setUsers(userRes.data);
     } catch {
       toast.error('Failed to fetch data');
@@ -204,7 +204,8 @@ export default function LoanApplications({ statusFilter = 'all' }: LoanApplicati
                 <th className="px-4 py-2 border">Amount</th>
                 <th className="px-4 py-2 border">Duration</th>
                 <th className="px-4 py-2 border">Status</th>
-                <th className="px-4 py-2 border">Date</th>
+                <th className="px-4 py-2 border">Date Applied</th>
+                <th className="px-4 py-2 border">Date Approved</th>
                 <th className="px-4 py-2 border">Actions</th>
               </tr>
             </thead>

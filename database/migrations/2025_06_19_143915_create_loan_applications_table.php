@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('amount', 15, 2);
             $table->decimal('duration', 15, 2);
             $table->string('status')->default('pending'); // pending, approved, rejected
+            $table->date('approvedOn')->nullable();
             $table->text('reason')->nullable();
             $table->timestamps();
         });
