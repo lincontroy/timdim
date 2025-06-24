@@ -337,7 +337,7 @@ export default function LoanApplications({ statusFilter = 'all' }: LoanApplicati
                     <input
                       name="duration"
                       type="text"
-                      placeholder="Duration (e.g. 6 months)"
+                      placeholder="Duration (e.g. 6 Days)"
                       className="w-full border rounded p-2"
                       value={formData.duration}
                       onChange={handleInputChange}
