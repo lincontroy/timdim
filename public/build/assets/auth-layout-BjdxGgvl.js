@@ -1,0 +1,6 @@
+import{c as l}from"./button-BOC1bfev.js";import{j as e,$ as r}from"./app-BYI-4jh4.js";/**
+ * @license lucide-react v0.475.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const n=[["path",{d:"M21 12a9 9 0 1 1-6.219-8.56",key:"13zald"}]],m=l("LoaderCircle",n);function i({children:c,title:s,description:t}){return e.jsx("div",{className:"flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10",children:e.jsx("div",{className:"w-full max-w-sm",children:e.jsxs("div",{className:"flex flex-col gap-8",children:[e.jsxs("div",{className:"flex flex-col items-center gap-4",children:[e.jsxs(r,{href:route("home"),className:"flex flex-col items-center gap-2 font-medium",children:[e.jsx("img",{src:"/logo.png",alt:"Logo",width:"200px",height:"200px"}),e.jsx("span",{className:"sr-only",children:s})]}),e.jsxs("div",{className:"space-y-2 text-center",children:[e.jsx("h1",{className:"text-xl font-medium",children:s}),e.jsx("p",{className:"text-center text-sm text-muted-foreground",children:t})]})]}),c]})})})}function d({children:c,title:s,description:t,...a}){return e.jsx(i,{title:s,description:t,...a,children:c})}export{d as A,m as L};
