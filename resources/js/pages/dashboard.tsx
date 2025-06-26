@@ -79,7 +79,7 @@ useEffect(() => {
 
       // Convert to array and sort
       const result = Object.values(merged).sort((a, b) => a.month.localeCompare(b.month));
-      console.log(result)
+    //   console.log(result)
       
       setChartData(result);
     } catch (err) {

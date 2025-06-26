@@ -15,4 +15,10 @@ class LoanApplication extends Model
     {
         return $this->belongsTo(Customer::class);
     } 
+
+
+    public function guarantors()
+{
+    return $this->belongsToMany(Customer::class, 'guarantor_loan');
+}
 }

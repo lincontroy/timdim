@@ -11,10 +11,16 @@ interface Loan {
   user_id: number;
   amount: number;
   duration: string;
+  interest_rate: number;
+  total_to_pay: number;
+  total_paid: number;
   status: string;
   created_at: string;
+  approvedOn: string;
+  guarantors:[];
   customer?: { name: string };
 }
+
 
 interface User {
   id: number;
@@ -33,7 +39,13 @@ export default function LoanApplications({ statusFilter = 'all' }: LoanApplicati
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState({ user_id: '', amount: '', duration: '' });
+  const [formData, setFormData] = useState({
+    user_id: '',
+    amount: '',
+    duration: '',
+    interest_rate: '', 
+    guarantors: [] as number[],
+  });
   const [errors, setErrors] = useState({ user_id: '', amount: '', duration: '' });
 
  
@@ -65,7 +77,7 @@ export default function LoanApplications({ statusFilter = 'all' }: LoanApplicati
   }, []);
 
   const resetForm = () => {
-    setFormData({ user_id: '', amount: '', duration: '' });
+    setFormData({ user_id: '', amount: '', duration: '' ,interest_rate:'',guarantors:[]});
     setErrors({ user_id: '', amount: '', duration: '' });
   };
 
@@ -202,8 +214,12 @@ export default function LoanApplications({ statusFilter = 'all' }: LoanApplicati
               <tr>
                 <th className="px-4 py-2 border">Customer</th>
                 <th className="px-4 py-2 border">Amount</th>
+                <th className="px-4 py-2 border">Interest %</th>
+                <th className="px-4 py-2 border">Total To Pay</th>
+                <th className="px-4 py-2 border">Total Paid</th>
                 <th className="px-4 py-2 border">Duration</th>
                 <th className="px-4 py-2 border">Status</th>
+                <th className="px-4 py-2 border">Guarantors</th>
                 <th className="px-4 py-2 border">Date Applied</th>
                 <th className="px-4 py-2 border">Date Approved</th>
                 <th className="px-4 py-2 border">Actions</th>
@@ -217,7 +233,10 @@ export default function LoanApplications({ statusFilter = 'all' }: LoanApplicati
                       {loan.customer?.name || 'Unknown'}
                     </td>
                     <td className="px-4 py-2 border">KES {loan.amount}</td>
-                    <td className="px-4 py-2 border">{loan.duration} Days</td>
+                    <td className="px-4 py-2 border">{loan.interest_rate} %</td>
+                    <td className="px-4 py-2 border">KES {loan.total_to_pay}</td>
+                    <td className="px-4 py-2 border">KES {loan.total_paid}</td>
+                    <td className="px-4 py-2 border">{loan.duration} Days </td>
                     <td className="px-4 py-2 border">
                         <span
                           className={`px-2 py-1 text-xs rounded-full ${
@@ -231,10 +250,21 @@ export default function LoanApplications({ statusFilter = 'all' }: LoanApplicati
                           {loan.status}
                         </span>
                       </td>
+                      <td className="px-4 py-2 border">
+                        {loan.guarantors?.length
+                          ? loan.guarantors.map(g => g.name).join(', ')
+                          : 'No guarantors'}
+                      </td>
 
                     <td className="px-4 py-2 border">
                       {new Date(loan.created_at).toLocaleDateString()}
                     </td>
+                    <td className="px-4 py-2 border">
+                      {loan.approvedOn
+                        ? new Date(loan.approvedOn).toLocaleDateString()
+                        : 'Not approved'}
+                    </td>
+
                     <td className="px-4 py-2 border text-center space-x-2">
                       <button
                         className="text-green-600 hover:underline text-sm"
@@ -282,7 +312,7 @@ export default function LoanApplications({ statusFilter = 'all' }: LoanApplicati
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black bg-opacity-20" />
+            <div className="fixed inset-0 bg-black/30 bg-opacity-10" />
           </Transition.Child>
 
           <div className="fixed inset-0 flex items-center justify-center p-4">
@@ -347,6 +377,40 @@ export default function LoanApplications({ statusFilter = 'all' }: LoanApplicati
                       <p className="text-red-600 text-sm">{errors.duration}</p>
                     )}
                   </div>
+
+                  <div>
+                    <input
+                      name="interest_rate"
+                      type="number"
+                      placeholder="Interest Rate (%)"
+                      className="w-full border rounded p-2"
+                      value={formData.interest_rate || ''}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Guarantors</label>
+                    <select
+                      multiple
+                      name="guarantors"
+                      className="w-full border rounded p-2"
+                      value={formData.guarantors.map(String)} // convert to string array for <select>
+                      onChange={(e) => {
+                        const options = Array.from(e.target.selectedOptions, (option) =>
+                          parseInt(option.value)
+                        );
+                        setFormData((prev) => ({ ...prev, guarantors: options }));
+                      }}
+                    >
+                      {users.map((user) => (
+                        <option key={user.id} value={user.id}>
+                          {user.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+
                 </div>
 
                 <div className="flex justify-end gap-2">

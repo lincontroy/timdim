@@ -12,7 +12,7 @@ class LoanApplicationController extends Controller
 {
     public function index()
     {
-        return LoanApplication::with('customer')->latest()->get();
+        return LoanApplication::with('guarantors','customer')->latest()->get();
     }
 
     public function store(Request $request)
@@ -23,15 +23,30 @@ class LoanApplicationController extends Controller
             'amount' => 'required|numeric|min:1',
             'status' => 'nullable|string',
             'reason' => 'nullable|string',
+            'interest_rate' => 'nullable|numeric|min:0',
+            'guarantors' => 'nullable|array',
+            'guarantors.*' => 'exists:customers,id',
         ]);
 
-        return LoanApplication::create([
-            'customer_id' => $request->user_id,
-            'amount' => $request->amount,
+        
+
+        $interestRate = $validated['interest_rate'] ?? 10; // default 10%
+        $principal = $validated['amount'];
+        $totalToPay = $principal + ($principal * $interestRate / 100);
+
+        $loan = LoanApplication::create([
+            'customer_id' => $validated['user_id'],
+            'amount' => $principal,
             'duration' => $request->duration,
-            'status' => 'pending',
-            'reason' => $request->reason,
+            'interest_rate' => $interestRate,
+            'total_to_pay' => $totalToPay,
+            'total_paid' => 0,
         ]);
+        if (!empty($validated['guarantors'])) {
+            $loan->guarantors()->sync($validated['guarantors']);
+        }
+
+        return response()->json($loan->load('guarantors'), 201);
     }
 
     public function show($id)
